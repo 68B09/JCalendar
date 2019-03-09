@@ -35,4 +35,5 @@ see also 'LICENSE' file
 
 履歴
 -----
+2019/3/9 ZZO(68B09) 祝祭日データを更新 
 2017/1/19 ZZO(68B09) First release. 
