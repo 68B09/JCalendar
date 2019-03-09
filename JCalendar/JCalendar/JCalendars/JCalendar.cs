@@ -241,39 +241,55 @@ namespace JCalendars
 			List<HolidayData> list = new List<HolidayData>();
 
 			list.Add(HolidayData.CreateByDay("元日", 1949, MAXYEAR, 1, 1));						// 1948年7月20日に公布・施行
+
 			list.Add(HolidayData.CreateByDay("成人の日", 1949, 1999, 1, 15));					// 1948年7月20日に公布・施行
 			list.Add(HolidayData.CreateByWeek("成人の日", 2000, MAXYEAR, 1, 2, 1));				// 1998年10月21日に改正、2000年1月1日に施行
 
 			list.Add(HolidayData.CreateByDay("建国記念の日", 1967, MAXYEAR, 2, 11));			// 1966年6月25日に改正・施行
-			list.Add(HolidayData.CreateByDay("(昭和天皇)大喪の礼", 1989, 1989, 2, 24));
 
-			list.Add(HolidayData.CreateByDay("明仁親王の結婚の儀", 1959, 1959, 4, 10));
 			list.Add(HolidayData.CreateByDay("天皇誕生日", 1949, 1988, 4, 29));					// 1948年7月20日に公布・施行
+			list.Add(HolidayData.CreateByDay("天皇誕生日", 1989, 2018, 12, 23));				// 1989年2月17日に改正・施行
+			list.Add(HolidayData.CreateByDay("天皇誕生日", 2020, MAXYEAR, 2, 23));				// 1989年2月17日に改正・施行
+
 			list.Add(HolidayData.CreateByDay("みどりの日", 1989, 2006, 4, 29));					// 1989年2月17日に改正・施行
+			list.Add(HolidayData.CreateByDay("みどりの日", 2007, MAXYEAR, 5, 4));				// 2005年5月20日に改正、2007年1月1日に施行
+
 			list.Add(HolidayData.CreateByDay("昭和の日", 2007, MAXYEAR, 4, 29));				// 2005年5月20日に改正、2007年1月1日に施行
 
 			list.Add(HolidayData.CreateByDay("憲法記念日", 1949, MAXYEAR, 5, 3));				// 1948年7月20日に公布・施行
-			list.Add(HolidayData.CreateByDay("みどりの日", 2007, MAXYEAR, 5, 4));				// 2005年5月20日に改正、2007年1月1日に施行
+
 			list.Add(HolidayData.CreateByDay("こどもの日", 1949, MAXYEAR, 5, 5));				// 1948年7月20日に公布・施行
 
-			list.Add(HolidayData.CreateByDay("徳仁親王の結婚の儀", 1993, 1993, 6, 9));
-
 			list.Add(HolidayData.CreateByDay("海の日", 1996, 2002, 7, 20));						// 1995年3月8日に改正、1996年1月1日に施行
-			list.Add(HolidayData.CreateByWeek("海の日", 2003, MAXYEAR, 7, 3, 1));				// 2001年6月22日に改正、2003年1月1日に施行
+			list.Add(HolidayData.CreateByWeek("海の日", 2003, 2019, 7, 3, 1));					// 2001年6月22日に改正、2003年1月1日に施行
+			list.Add(HolidayData.CreateByDay("海の日", 2020, 2020, 7, 23));						// 2018年6月20日に公布・施行
+			list.Add(HolidayData.CreateByWeek("海の日", 2021, MAXYEAR, 7, 3, 1));				// 2001年6月22日に改正、2003年1月1日に施行
 
-			list.Add(HolidayData.CreateByDay("山の日", 2016, MAXYEAR, 8, 11));					// 2014年5月30日に改正、2016年1月1日に施行
+			list.Add(HolidayData.CreateByDay("山の日", 2016, 2019, 8, 11));						// 2014年5月30日に改正、2016年1月1日に施行
+			list.Add(HolidayData.CreateByDay("山の日", 2020, 2020, 8, 10));						// 2018年6月20日に公布・施行
+			list.Add(HolidayData.CreateByDay("山の日", 2021, MAXYEAR, 8, 11));					// 2014年5月30日に改正、2016年1月1日に施行
 
 			list.Add(HolidayData.CreateByDay("敬老の日", 1966, 2002, 9, 15));					// 1966年6月25日に改正・施行
 			list.Add(HolidayData.CreateByWeek("敬老の日", 2003, MAXYEAR, 9, 3, 1));				// 2001年6月22日に改正、2003年1月1日に施行
 
 			list.Add(HolidayData.CreateByDay("体育の日", 1966, 1999, 10, 10));					// 1966年6月25日に改正・施行
-			list.Add(HolidayData.CreateByWeek("体育の日", 2000, MAXYEAR, 10, 2, 1));			// 1998年10月21日に改正、2000年1月1日に施行
+			list.Add(HolidayData.CreateByWeek("体育の日", 2000, 2019, 10, 2, 1));				// 1998年10月21日に改正、2000年1月1日に施行
+			list.Add(HolidayData.CreateByDay("スポーツの日", 2020, 2020, 7, 24));				// 2018年6月20日に公布・施行
+			list.Add(HolidayData.CreateByWeek("スポーツの日", 2021, MAXYEAR, 10, 2, 1));		// 2018年6月20日に公布・施行
 
 			list.Add(HolidayData.CreateByDay("文化の日", 1948, MAXYEAR, 11, 3));				// 1948年7月20日に公布・施行
-			list.Add(HolidayData.CreateByDay("(今上天皇)即位礼正殿の儀", 1990, 1990, 11, 12));
+
 			list.Add(HolidayData.CreateByDay("勤労感謝の日", 1948, MAXYEAR, 11, 23));			// 1948年7月20日に公布・施行
 
-			list.Add(HolidayData.CreateByDay("天皇誕生日", 1989, MAXYEAR, 12, 23));				// 1989年2月17日に改正・施行
+			list.Add(HolidayData.CreateByDay("大喪の礼", 1989, 1989, 2, 24));
+
+			list.Add(HolidayData.CreateByDay("明仁親王の結婚の儀", 1959, 1959, 4, 10));
+			list.Add(HolidayData.CreateByDay("徳仁親王の結婚の儀", 1993, 1993, 6, 9));			// 1993年4月30日に公布・施行
+
+			list.Add(HolidayData.CreateByDay("即位礼正殿の儀", 1990, 1990, 11, 12));
+			list.Add(HolidayData.CreateByDay("即位礼正殿の儀", 2019, 2019, 10, 22));			// 2018年12月14日に公布・施行
+
+			list.Add(HolidayData.CreateByDay("天皇の即位の日", 2019, 2019, 5, 1));				// 2018年12月14日に公布・施行
 
 			return list;
 		}
