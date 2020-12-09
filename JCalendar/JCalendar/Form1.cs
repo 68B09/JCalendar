@@ -60,12 +60,31 @@ namespace JCalendar
 
 			StringBuilder sb = new StringBuilder();
 
-			for (int i = ss; i <= ee; i++) {
-				string result = this.Calc(i);
-				if (sb.Length > 0) {
-					sb.Append("\r\n");
+			if (this.radNormal.Checked) {
+				for (int i = ss; i <= ee; i++) {
+					string result = this.Calc(i);
+					if (sb.Length > 0) {
+						sb.Append("\r\n");
+					}
+					sb.Append(result);
 				}
-				sb.Append(result);
+			} else if (this.radJSON.Checked) {
+				JCalendars.JCalendar jc = new JCalendars.JCalendar();
+				sb.Clear();
+				for (int year = ss; year <= ee; year++) {
+					sb.AppendFormat("		{0}=>array(\r\n", year);
+
+					DateTime date = new DateTime(year, 1, 1);
+					while (date.Year == year) {
+						string name;
+						if (jc.IsHoliday(date, out name) != JCalendars.HolidayTypes.HEIJITU) {
+							sb.AppendFormat("					'{0:D}{1:D2}'=>'{2}',\r\n", date.Month, date.Day, name);
+						}
+						date = date.AddDays(1);
+					}
+
+					sb.Append("					),\r\n");
+				}
 			}
 
 			this.txtResult.Text = sb.ToString();
@@ -92,7 +111,7 @@ namespace JCalendar
 					sb.Append(date.Month);
 					sb.Append("/");
 					sb.Append(date.Day);
-					sb.Append(' ');
+					sb.Append('\t');
 					sb.Append(name);
 					sb.Append("\r\n");
 				}

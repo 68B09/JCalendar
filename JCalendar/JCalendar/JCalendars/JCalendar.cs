@@ -263,11 +263,13 @@ namespace JCalendars
 			list.Add(HolidayData.CreateByDay("海の日", 1996, 2002, 7, 20));						// 1995年3月8日に改正、1996年1月1日に施行
 			list.Add(HolidayData.CreateByWeek("海の日", 2003, 2019, 7, 3, 1));					// 2001年6月22日に改正、2003年1月1日に施行
 			list.Add(HolidayData.CreateByDay("海の日", 2020, 2020, 7, 23));						// 2018年6月20日に公布・施行
-			list.Add(HolidayData.CreateByWeek("海の日", 2021, MAXYEAR, 7, 3, 1));				// 2001年6月22日に改正、2003年1月1日に施行
+			list.Add(HolidayData.CreateByDay("海の日", 2021, 2021, 7, 22));						// 2021年公布
+			list.Add(HolidayData.CreateByWeek("海の日", 2022, MAXYEAR, 7, 3, 1));				// 2001年6月22日に改正、2003年1月1日に施行
 
 			list.Add(HolidayData.CreateByDay("山の日", 2016, 2019, 8, 11));						// 2014年5月30日に改正、2016年1月1日に施行
 			list.Add(HolidayData.CreateByDay("山の日", 2020, 2020, 8, 10));						// 2018年6月20日に公布・施行
-			list.Add(HolidayData.CreateByDay("山の日", 2021, MAXYEAR, 8, 11));					// 2014年5月30日に改正、2016年1月1日に施行
+			list.Add(HolidayData.CreateByDay("山の日", 2021, 2021, 8, 8));						// 2021年公布
+			list.Add(HolidayData.CreateByDay("山の日", 2022, MAXYEAR, 8, 11));					// 2014年5月30日に改正、2016年1月1日に施行
 
 			list.Add(HolidayData.CreateByDay("敬老の日", 1966, 2002, 9, 15));					// 1966年6月25日に改正・施行
 			list.Add(HolidayData.CreateByWeek("敬老の日", 2003, MAXYEAR, 9, 3, 1));				// 2001年6月22日に改正、2003年1月1日に施行
@@ -275,7 +277,8 @@ namespace JCalendars
 			list.Add(HolidayData.CreateByDay("体育の日", 1966, 1999, 10, 10));					// 1966年6月25日に改正・施行
 			list.Add(HolidayData.CreateByWeek("体育の日", 2000, 2019, 10, 2, 1));				// 1998年10月21日に改正、2000年1月1日に施行
 			list.Add(HolidayData.CreateByDay("スポーツの日", 2020, 2020, 7, 24));				// 2018年6月20日に公布・施行
-			list.Add(HolidayData.CreateByWeek("スポーツの日", 2021, MAXYEAR, 10, 2, 1));		// 2018年6月20日に公布・施行
+			list.Add(HolidayData.CreateByDay("スポーツの日", 2021, 2021, 7, 23));				// 2021年公布
+			list.Add(HolidayData.CreateByWeek("スポーツの日", 2022, MAXYEAR, 10, 2, 1));		// 2018年6月20日に公布・施行
 
 			list.Add(HolidayData.CreateByDay("文化の日", 1948, MAXYEAR, 11, 3));				// 1948年7月20日に公布・施行
 

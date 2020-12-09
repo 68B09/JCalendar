@@ -33,7 +33,11 @@
 			this.cmbYearTo = new System.Windows.Forms.ComboBox();
 			this.txtResult = new System.Windows.Forms.TextBox();
 			this.cmbYear = new System.Windows.Forms.ComboBox();
+			this.radNormal = new System.Windows.Forms.RadioButton();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.radJSON = new System.Windows.Forms.RadioButton();
 			this.groupBox1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// groupBox1
@@ -41,7 +45,7 @@
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox1.Controls.Add(this.btnMakeList);
+			this.groupBox1.Controls.Add(this.groupBox2);
 			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Controls.Add(this.cmbYearTo);
 			this.groupBox1.Controls.Add(this.txtResult);
@@ -55,7 +59,7 @@
 			// 
 			// btnMakeList
 			// 
-			this.btnMakeList.Location = new System.Drawing.Point(197, 19);
+			this.btnMakeList.Location = new System.Drawing.Point(6, 9);
 			this.btnMakeList.Name = "btnMakeList";
 			this.btnMakeList.Size = new System.Drawing.Size(93, 21);
 			this.btnMakeList.TabIndex = 3;
@@ -105,6 +109,38 @@
 			this.cmbYear.TabIndex = 0;
 			this.cmbYear.SelectedIndexChanged += new System.EventHandler(this.cmbYear_SelectedIndexChanged);
 			// 
+			// radNormal
+			// 
+			this.radNormal.AutoSize = true;
+			this.radNormal.Checked = true;
+			this.radNormal.Location = new System.Drawing.Point(116, 11);
+			this.radNormal.Name = "radNormal";
+			this.radNormal.Size = new System.Drawing.Size(53, 17);
+			this.radNormal.TabIndex = 5;
+			this.radNormal.Text = "通常";
+			this.radNormal.UseVisualStyleBackColor = true;
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.radJSON);
+			this.groupBox2.Controls.Add(this.radNormal);
+			this.groupBox2.Controls.Add(this.btnMakeList);
+			this.groupBox2.Location = new System.Drawing.Point(173, 10);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(238, 33);
+			this.groupBox2.TabIndex = 6;
+			this.groupBox2.TabStop = false;
+			// 
+			// radJSON
+			// 
+			this.radJSON.AutoSize = true;
+			this.radJSON.Location = new System.Drawing.Point(175, 11);
+			this.radJSON.Name = "radJSON";
+			this.radJSON.Size = new System.Drawing.Size(53, 17);
+			this.radJSON.TabIndex = 6;
+			this.radJSON.Text = "JSON";
+			this.radJSON.UseVisualStyleBackColor = true;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -117,6 +153,8 @@
 			this.Text = "Form1";
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -129,6 +167,9 @@
 		private System.Windows.Forms.Button btnMakeList;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox cmbYearTo;
+		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.RadioButton radJSON;
+		private System.Windows.Forms.RadioButton radNormal;
 	}
 }
 
