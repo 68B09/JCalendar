@@ -23,6 +23,7 @@ SOFTWARE.
 
 [Update History]
 2017/01/20	ZZO(68B09)	First Release.
+2020/12/09	ZZO(68B09)	2021年(令和3年)用の定義を追加
 */
 
 using System;
@@ -235,7 +236,10 @@ namespace JCalendars
 		/// <summary>
 		/// 規定の祝祭日定義作成
 		/// </summary>
-		/// <returns>2017/1/1時点を基準とする祝祭日定義リスト</returns>
+		/// <returns>祝祭日定義リスト</returns>
+		/// <remarks>
+		/// 2020/12/09	ZZO(68B09)	2021年(令和3年)用の定義を追加
+		/// </remarks>
 		static public List<HolidayData> CreateDefaultHolidays()
 		{
 			List<HolidayData> list = new List<HolidayData>();
