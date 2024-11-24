@@ -186,6 +186,23 @@ namespace JCalendars
 		}
 
 		/// <summary>
+		/// 日付作成
+		/// </summary>
+		/// <param name="pYear">西暦年</param>
+		/// <returns>DateTime</returns>
+		/// <remarks>定義の日付や条件を指定された年の日付に変換して返します。</remarks>
+		public DateTime CreateDate(int pYear)
+		{
+			if (this.DefineType == DefineTypes.MONTHDAY) {
+				// 定義が月日
+				return new DateTime(pYear, this.Month, this.Day);
+			}
+
+			// 定義が週＋曜日
+			return new DateTime(pYear, this.Month, JCalendar.GetDayByNthWeek(pYear, this.Month, this.NumberOfWeek, this.Week));
+		}
+
+		/// <summary>
 		/// 月日型定義作成
 		/// </summary>
 		/// <param name="pName">祝祭日名</param>
@@ -239,7 +256,7 @@ namespace JCalendars
 		}
 
 		/// <summary>
-		/// 春・春分の日定義作成
+		/// 春・秋分の日定義作成
 		/// </summary>
 		/// <param name="pYear">西暦年</param>
 		/// <param name="pDay">日 1～31</param>

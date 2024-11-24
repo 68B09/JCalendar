@@ -28,14 +28,17 @@
 		private void InitializeComponent()
 		{
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.radJSON = new System.Windows.Forms.RadioButton();
+			this.radNormal = new System.Windows.Forms.RadioButton();
 			this.btnMakeList = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.cmbYearTo = new System.Windows.Forms.ComboBox();
 			this.txtResult = new System.Windows.Forms.TextBox();
 			this.cmbYear = new System.Windows.Forms.ComboBox();
-			this.radNormal = new System.Windows.Forms.RadioButton();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.radJSON = new System.Windows.Forms.RadioButton();
+			this.chkZeroPad = new System.Windows.Forms.CheckBox();
+			this.chkAddLine = new System.Windows.Forms.CheckBox();
+			this.chkComma = new System.Windows.Forms.CheckBox();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
@@ -56,6 +59,42 @@
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Year";
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.chkComma);
+			this.groupBox2.Controls.Add(this.chkAddLine);
+			this.groupBox2.Controls.Add(this.chkZeroPad);
+			this.groupBox2.Controls.Add(this.radJSON);
+			this.groupBox2.Controls.Add(this.radNormal);
+			this.groupBox2.Controls.Add(this.btnMakeList);
+			this.groupBox2.Location = new System.Drawing.Point(6, 47);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(628, 33);
+			this.groupBox2.TabIndex = 6;
+			this.groupBox2.TabStop = false;
+			// 
+			// radJSON
+			// 
+			this.radJSON.AutoSize = true;
+			this.radJSON.Location = new System.Drawing.Point(175, 11);
+			this.radJSON.Name = "radJSON";
+			this.radJSON.Size = new System.Drawing.Size(53, 17);
+			this.radJSON.TabIndex = 6;
+			this.radJSON.Text = "JSON";
+			this.radJSON.UseVisualStyleBackColor = true;
+			// 
+			// radNormal
+			// 
+			this.radNormal.AutoSize = true;
+			this.radNormal.Checked = true;
+			this.radNormal.Location = new System.Drawing.Point(116, 11);
+			this.radNormal.Name = "radNormal";
+			this.radNormal.Size = new System.Drawing.Size(53, 17);
+			this.radNormal.TabIndex = 5;
+			this.radNormal.TabStop = true;
+			this.radNormal.Text = "通常";
+			this.radNormal.UseVisualStyleBackColor = true;
 			// 
 			// btnMakeList
 			// 
@@ -91,11 +130,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtResult.ImeMode = System.Windows.Forms.ImeMode.Off;
-			this.txtResult.Location = new System.Drawing.Point(6, 46);
+			this.txtResult.Location = new System.Drawing.Point(6, 86);
 			this.txtResult.Multiline = true;
 			this.txtResult.Name = "txtResult";
 			this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtResult.Size = new System.Drawing.Size(628, 706);
+			this.txtResult.Size = new System.Drawing.Size(628, 666);
 			this.txtResult.TabIndex = 4;
 			this.txtResult.WordWrap = false;
 			// 
@@ -109,37 +148,41 @@
 			this.cmbYear.TabIndex = 0;
 			this.cmbYear.SelectedIndexChanged += new System.EventHandler(this.cmbYear_SelectedIndexChanged);
 			// 
-			// radNormal
+			// chkZeroPad
 			// 
-			this.radNormal.AutoSize = true;
-			this.radNormal.Checked = true;
-			this.radNormal.Location = new System.Drawing.Point(116, 11);
-			this.radNormal.Name = "radNormal";
-			this.radNormal.Size = new System.Drawing.Size(53, 17);
-			this.radNormal.TabIndex = 5;
-			this.radNormal.Text = "通常";
-			this.radNormal.UseVisualStyleBackColor = true;
+			this.chkZeroPad.AutoSize = true;
+			this.chkZeroPad.Checked = true;
+			this.chkZeroPad.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkZeroPad.Location = new System.Drawing.Point(246, 12);
+			this.chkZeroPad.Name = "chkZeroPad";
+			this.chkZeroPad.Size = new System.Drawing.Size(82, 17);
+			this.chkZeroPad.TabIndex = 7;
+			this.chkZeroPad.Text = "/1/=/01/";
+			this.chkZeroPad.UseVisualStyleBackColor = true;
 			// 
-			// groupBox2
+			// chkAddLine
 			// 
-			this.groupBox2.Controls.Add(this.radJSON);
-			this.groupBox2.Controls.Add(this.radNormal);
-			this.groupBox2.Controls.Add(this.btnMakeList);
-			this.groupBox2.Location = new System.Drawing.Point(173, 10);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(238, 33);
-			this.groupBox2.TabIndex = 6;
-			this.groupBox2.TabStop = false;
+			this.chkAddLine.AutoSize = true;
+			this.chkAddLine.Checked = true;
+			this.chkAddLine.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkAddLine.Location = new System.Drawing.Point(334, 11);
+			this.chkAddLine.Name = "chkAddLine";
+			this.chkAddLine.Size = new System.Drawing.Size(82, 17);
+			this.chkAddLine.TabIndex = 8;
+			this.chkAddLine.Text = "空行追加";
+			this.chkAddLine.UseVisualStyleBackColor = true;
 			// 
-			// radJSON
+			// chkComma
 			// 
-			this.radJSON.AutoSize = true;
-			this.radJSON.Location = new System.Drawing.Point(175, 11);
-			this.radJSON.Name = "radJSON";
-			this.radJSON.Size = new System.Drawing.Size(53, 17);
-			this.radJSON.TabIndex = 6;
-			this.radJSON.Text = "JSON";
-			this.radJSON.UseVisualStyleBackColor = true;
+			this.chkComma.AutoSize = true;
+			this.chkComma.Checked = true;
+			this.chkComma.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkComma.Location = new System.Drawing.Point(422, 10);
+			this.chkComma.Name = "chkComma";
+			this.chkComma.Size = new System.Drawing.Size(75, 17);
+			this.chkComma.TabIndex = 9;
+			this.chkComma.Text = ",区切り";
+			this.chkComma.UseVisualStyleBackColor = true;
 			// 
 			// Form1
 			// 
@@ -170,6 +213,9 @@
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.RadioButton radJSON;
 		private System.Windows.Forms.RadioButton radNormal;
+		private System.Windows.Forms.CheckBox chkZeroPad;
+		private System.Windows.Forms.CheckBox chkAddLine;
+		private System.Windows.Forms.CheckBox chkComma;
 	}
 }
 

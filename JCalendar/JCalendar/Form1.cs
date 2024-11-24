@@ -64,7 +64,9 @@ namespace JCalendar
 				for (int i = ss; i <= ee; i++) {
 					string result = this.Calc(i);
 					if (sb.Length > 0) {
-						sb.Append("\r\n");
+						if (this.chkAddLine.Checked) {
+							sb.Append("\r\n");
+						}
 					}
 					sb.Append(result);
 				}
@@ -108,10 +110,22 @@ namespace JCalendar
 				if (jc.IsHoliday(date, out name) != JCalendars.HolidayTypes.HEIJITU) {
 					sb.Append(date.Year);
 					sb.Append("/");
-					sb.Append(date.Month);
+					if (this.chkZeroPad.Checked) {
+						sb.Append(date.Month.ToString("D2"));
+					} else {
+						sb.Append(date.Month);
+					}
 					sb.Append("/");
-					sb.Append(date.Day);
-					sb.Append('\t');
+					if (this.chkZeroPad.Checked) {
+						sb.Append(date.Day.ToString("D2"));
+					} else {
+						sb.Append(date.Day);
+					}
+					if (this.chkComma.Checked) {
+						sb.Append(',');
+					} else {
+						sb.Append('\t');
+					}
 					sb.Append(name);
 					sb.Append("\r\n");
 				}

@@ -24,13 +24,14 @@ SOFTWARE.
 [Update History]
 2017/01/20	ZZO(68B09)	First Release.
 2020/12/09	ZZO(68B09)	2021年(令和3年)用の定義を追加
+2024/11/23	ZZO(68B09)	連続判定時のパフォーマンス向上のためロジックを刷新
+						IsHolidayが国民の休日をFURIKAEで返す不具合を修正
 */
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
 
 namespace JCalendars
 {
@@ -51,10 +52,10 @@ namespace JCalendars
 	/// </summary>
 	/// <remarks>
 	/// ・指定される西暦年月日が日本の祝祭日であるかを判定する
-	/// ・西暦1950年(昭和25年)から2017年迄の祝祭日をサポートする
-	/// ・2017年以降の祝祭日は2017年の条件を使用する
+	/// ・西暦1950年(昭和25年)から2021年迄の祝祭日をサポートする
+	/// ・2021年以降の祝祭日は2021年の条件を使用する
 	/// ・春・秋分の日の判定は計算で行うため実際の日とは異なる可能性がある
-	/// 　尚、1950年～2017年までの春・秋分の日は計算結果と合致する。
+	/// 　尚、1950年～2021年までの公布された春・秋分の日は計算結果と合致する。
 	/// </remarks>
 	public class JCalendar
 	{
@@ -89,6 +90,11 @@ namespace JCalendars
 		/// 現施行用祝祭日終了年
 		/// </summary>
 		public const int MAXYEAR = 9999;
+
+		/// <summary>
+		/// 年ごとの祝日休日辞書
+		/// </summary>
+		private Dictionary<int, HolidayCache> yearlyHolidayCache = new Dictionary<int, HolidayCache>();
 		#endregion
 
 		#region コンストラクタ
@@ -123,114 +129,162 @@ namespace JCalendars
 		/// </remarks>
 		public HolidayTypes IsHoliday(DateTime pDate, out string pName)
 		{
+			// 作成済みならそれを、未作成なら１年分を作る
+			HolidayCache holidayCache = null;
+			if (this.yearlyHolidayCache.ContainsKey(pDate.Year)) {
+				holidayCache = this.yearlyHolidayCache[pDate.Year];
+			} else {
+				holidayCache = this.CreateYearlyHolidays(pDate.Year);
+				this.yearlyHolidayCache[pDate.Year] = holidayCache;
+			}
+
+			// 休日検索
+			HolidayCacheRecord holidayCacheData;
+			if (holidayCache.TryGetValue(pDate.Date, out holidayCacheData)) {
+				pName = holidayCacheData.Name;
+				return holidayCacheData.HolidayType;
+			}
+
 			pName = null;
-			DateTime date;
-
-			// 祝祭日チェック
-			HolidayData holidayData = this.SearchHoliday(pDate);
-			if (holidayData != null) {
-				pName = holidayData.Name;
-				return holidayData.HolidayType;
-			}
-
-			// 振替チェック
-			if (pDate.CompareTo(date1973_04_12) >= 0) {
-				if (pDate.DayOfWeek != DayOfWeek.Sunday) {
-					// 直前の日曜日が祝日なら振り替えを探す
-					date = pDate.AddDays(-(int)pDate.DayOfWeek);	// 直前の日曜日の日付
-					holidayData = this.SearchHoliday(date, true);
-					if (holidayData != null) {								// 直前の日曜日が祝祭日なら
-						while (true) {
-							date = date.AddDays(1);
-							holidayData = this.SearchHoliday(date, true);
-							if (holidayData != null) {
-								continue;
-							}
-
-							if ((date.Year == pDate.Year) && (date.Month == pDate.Month) && (date.Day == pDate.Day)) {
-								pName = HolidayData.FurikaeName;
-								return HolidayTypes.FURIKAE;
-							}
-							break;
-						}
-					}
-				}
-			}
-
-			// 国民の休日
-			if (pDate.CompareTo(date1985_12_27) >= 0) {
-				if (pDate.DayOfWeek != DayOfWeek.Sunday) {
-					date = pDate.AddDays(-1);
-					holidayData = this.SearchHoliday(date);
-					if (holidayData != null) {
-						date = pDate.AddDays(1);
-						holidayData = this.SearchHoliday(date);
-						if (holidayData != null) {
-							pName = HolidayData.KokuminName;
-							return HolidayTypes.FURIKAE;
-						}
-					}
-				}
-			}
-
 			return HolidayTypes.HEIJITU;
 		}
 
 		/// <summary>
-		/// 祝祭日検索
+		/// 指定された年の休日一覧を作る
 		/// </summary>
-		/// <param name="pDate">対象年月日</param>
-		/// <param name="pSkipFurikae">true=振替としない設定にはヒットさせない</param>
-		/// <returns>HolidayData</returns>
-		private HolidayData SearchHoliday(DateTime pDate, bool pSkipFurikae = false)
+		/// <param name="pYear">西暦年</param>
+		/// <returns>HolidayCache</returns>
+		private HolidayCache CreateYearlyHolidays(int pYear)
 		{
-			// 定義リストから祝祭日を探す
-			// 同時に春分・秋分の日の定義もチェックする
+			// pYearと前後１ヶ月の祝日一覧を作る。
+			// 振替休日発生と国民の休日が年末年始に発生するケースを想定して前後を作る。
+			// ただし2024年現在はそのような休日は発生しない。
+			List<HolidayCacheRecord> holidays = new List<HolidayCacheRecord>();
+			holidays.AddRange(this.CreateHolidays(pYear - 1, 12, 12));
+			holidays.AddRange(this.CreateHolidays(pYear));
+			holidays.AddRange(this.CreateHolidays(pYear + 1, 1, 1));
+
+			// 休日一覧辞書
+			HolidayCache dic = new HolidayCache();
+			holidays.ForEach(item => dic.Add(item.Date, item));
+
+			// 振替休日を追加
+			foreach (HolidayCacheRecord data in holidays) {
+				// 日曜日以外は対象外
+				if (data.Date.DayOfWeek != DayOfWeek.Sunday) {
+					continue;
+				}
+
+				// 国民の祝日以外は対象外
+				if (data.HolidayType != HolidayTypes.SYUKUJITU) {
+					continue;
+				}
+
+				// 適用日より前は対象外
+				if (data.Date.CompareTo(date1973_04_12) < 0) {
+					continue;
+				}
+
+				// 次の平日を振替休日にする
+				DateTime date = data.Date.AddDays(1);
+				while (true) {
+					if ((dic.ContainsKey(date) == false) && (date.DayOfWeek != DayOfWeek.Sunday)) {
+						HolidayCacheRecord furikaeData = new HolidayCacheRecord(date, HolidayTypes.FURIKAE, HolidayData.FurikaeName);
+						dic.Add(date, furikaeData);
+						break;
+					}
+					date = date.AddDays(1);
+				}
+			}
+
+			// 国民の休日を追加
+			foreach (HolidayCacheRecord data in holidays) {
+				// 挟まれる日が日曜日(挟む日が土曜日)なら対象外
+				if (data.Date.DayOfWeek == DayOfWeek.Saturday) {
+					continue;
+				}
+
+				// 国民の祝日以外は対象外
+				if (data.HolidayType != HolidayTypes.SYUKUJITU) {
+					continue;
+				}
+
+				// 適用日より前は対象外
+				if (data.Date.CompareTo(date1985_12_27) < 0) {
+					continue;
+				}
+
+				DateTime date1 = data.Date.AddDays(1);
+				if ((dic.ContainsKey(date1) == false)) {
+					DateTime date2 = date1.AddDays(1);
+					if (dic.ContainsKey(date2)) {
+						if (dic[date2].HolidayType == HolidayTypes.SYUKUJITU) {
+							HolidayCacheRecord kokuminData = new HolidayCacheRecord(date1, HolidayTypes.KOKUMIN, HolidayData.KokuminName);
+							dic.Add(date1, kokuminData);
+						}
+					}
+				}
+			}
+
+			// 指定された年以外のデータを削除
+			KeyValuePair<DateTime, HolidayCacheRecord>[] removeData = dic.Where(x => x.Key.Year != pYear).ToArray();
+			foreach (KeyValuePair<DateTime, HolidayCacheRecord> item in removeData) {
+				dic.Remove(item.Key);
+			}
+
+			return dic;
+		}
+
+		/// <summary>
+		/// 定義を素に指定された年の祝日一覧を作る
+		/// </summary>
+		/// <param name="pYear">西暦年</param>
+		/// <param name="pMonthMin">最小月(1～12)</param>
+		/// <param name="pMonthMax">最大月(1～12)</param>
+		/// <returns>List<HolidayCacheData></returns>
+		private List<HolidayCacheRecord> CreateHolidays(int pYear, int pMonthMin = 1, int pMonthMax = 12)
+		{
+			// 祝日定義情報から指定された年の祝日の一覧を作成
 			bool defineHaru = false;
 			bool defineAki = false;
+			List<HolidayCacheRecord> holidays = new List<HolidayCacheRecord>();
 			foreach (HolidayData data in this.holidayList) {
-				if (data.IsHit(pDate)) {
-					if ((pSkipFurikae == false) || (data.IgnoreFurikae == false)) {
-						return data;
-					}
+				// 適用される年以外のデータは無視
+				if (data.IsHitYear(pYear) == false) {
+					continue;
 				}
-
+				// この祝日の指定された年の年月日
+				DateTime date = data.CreateDate(pYear);
+				// 範囲外の月のデータは無視
+				if ((date.Month < pMonthMin) || (data.Month > pMonthMax)) {
+					continue;
+				}
+				// リストに追加
+				holidays.Add(new HolidayCacheRecord(date, data.HolidayType, data.Name));
+				// 春分の日もしくは秋分の日の定義だった場合はフラグを立てて自動生成させない
 				if (data.IsHaru) {
-					if (data.IsHitYear(pDate.Year)) {
-						defineHaru = true;				// 春分の日の定義有り
-					}
+					defineHaru = true;
 				} else if (data.IsAki) {
-					if (data.IsHitYear(pDate.Year)) {
-						defineAki = true;				// 秋分の日の定義有り
-					}
+					defineAki = true;
+				}
+			}
+			// 春分の日追加
+			if (defineHaru == false) {
+				if ((pMonthMin <= 3) && (pMonthMax >= 3)) {
+					holidays.Add(new HolidayCacheRecord(new DateTime(pYear, 3, GetSyunbun(pYear)), HolidayTypes.SYUKUJITU, HolidayData.SyunbunName));
+				}
+			}
+			// 秋分の日追加
+			if (defineAki == false) {
+				if ((pMonthMin <= 9) && (pMonthMax >= 9)) {
+					holidays.Add(new HolidayCacheRecord(new DateTime(pYear, 9, GetSyuubun(pYear)), HolidayTypes.SYUKUJITU, HolidayData.SyuubunName));
 				}
 			}
 
-			// 春分の日をチェック
-			if (pDate.Month == 3) {
-				// 春分の日がリストに登録されていない場合に算出する
-				if (defineHaru == false) {
-					int day = GetSyunbun(pDate.Year);
-					if (pDate.Day == day) {
-						HolidayData data = HolidayData.CreateBySyunSyuubun(pDate.Year, day, HolidayData.HaruAkiFlags.HARU);
-						return data;
-					}
-				}
-			}
+			// 日付順にソート
+			holidays.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
 
-			// 秋分の日をチェック
-			if (pDate.Month == 9) {
-				// 春分の日がリストに登録されていない場合に算出する
-				if (defineAki == false) {
-					int day = GetSyuubun(pDate.Year);
-					if (pDate.Day == day) {
-						HolidayData data = HolidayData.CreateBySyunSyuubun(pDate.Year, day, HolidayData.HaruAkiFlags.AKI);
-						return data;
-					}
-				}
-			}
-
-			return null;
+			return holidays;
 		}
 
 		/// <summary>
@@ -338,7 +392,7 @@ namespace JCalendars
 		/// <remarks>
 		/// pYear年の秋分の日を計算して返す。
 		/// 本メソッドが返す日は予想であり、実際の秋分の日は前年に決定・発表されることに注意すること。
-		/// 尚、1950～2017年に関しては本メソッドが返す値と実際に施行された日は一致していた。
+		/// 尚、1950～2024年に関しては本メソッドが返す値と実際に施行された日は一致していた。
 		/// </remarks>
 		static public int GetSyuubun(int pYear)
 		{
@@ -400,6 +454,41 @@ namespace JCalendars
 		}
 
 		/// <summary>
+		/// 第Ｎ、Ｗ曜日の日を取得
+		/// </summary>
+		/// <param name="pYear">西暦年</param>
+		/// <param name="pMonth">月</param>
+		/// <param name="pNth">週番号(1～)</param>
+		/// <param name="pWeek">曜日(DayOfWeek)</param>
+		/// <returns>日(1～31)</returns>
+		/// <remarks>
+		/// 日 月 火 水 木 金 土
+		///                    1
+		///  2  3  4  5  6  7  8　　第１月曜日　return 3;
+		///  9 10 11 12 13 14 15　　第２月曜日　return 10;
+		/// 16 17 18 19 20 21 22
+		/// 23 24 25 26 27 28 29
+		/// 30 31　　               第５火曜日　ArgumentOutOfRangeException;
+		/// </remarks>
+		static public int GetDayByNthWeek(int pYear, int pMonth, int pNth, int pWeek)
+		{
+			int firstWeek = (int)(new DateTime(pYear, pMonth, 1).DayOfWeek);
+
+			// 最初のW曜日の日を計算
+			int day = 1 + ((pWeek - firstWeek + 7) % 7);
+
+			// N番目のW曜日の日を計算
+			day = day + (pNth - 1) * 7;
+
+			// 日数チェック
+			if (day > GetDays(pYear, pMonth)) {
+				throw new ArgumentOutOfRangeException();
+			}
+
+			return day;
+		}
+
+		/// <summary>
 		/// 第Ｎ、Ｗ曜日判定
 		/// </summary>
 		/// <param name="pDate">調査対象年月日</param>
@@ -452,4 +541,57 @@ namespace JCalendars
 		}
 		#endregion
 	}
+
+	/// <summary>
+	/// 休日キャッシュレコード
+	/// </summary>
+	public class HolidayCacheRecord
+	{
+		#region フィールド/プロパティー
+		public DateTime Date { get; set; }				// 日付
+		public HolidayTypes HolidayType { get; set; }	// 祝祭日タイプ
+		public string Name { get; set; }                // 名称
+		#endregion
+
+		#region コンストラクタ
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		public HolidayCacheRecord()
+		{
+			this.Date = DateTime.MinValue;
+			this.HolidayType = HolidayTypes.HEIJITU;
+			this.Name = "";
+		}
+
+		/// <summary>
+		/// コンストラクタ(初期値指定)
+		/// </summary>
+		public HolidayCacheRecord(DateTime pDate, HolidayTypes pType, string pName)
+		{
+			this.Date = pDate;
+			this.HolidayType = pType;
+			this.Name = pName;
+		}
+		#endregion
+
+		/// <summary>
+		/// 文字列化
+		/// </summary>
+		/// <returns>string</returns>
+		public override string ToString()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append(this.Date.ToString("yyyy/MM/dd "));
+			sb.Append(this.HolidayType);
+			sb.Append(" ");
+			sb.Append(this.Name);
+			return sb.ToString();
+		}
+	}
+
+	/// <summary>
+	/// 休日キャッシュ辞書
+	/// </summary>
+	internal class HolidayCache : Dictionary<DateTime, HolidayCacheRecord> { }
 }

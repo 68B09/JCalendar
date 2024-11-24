@@ -51,4 +51,4 @@ FOR EXAMPLE
 
 ------------------------------------------------------------------------------
 [Update History]
-2017/1/20	ZZO(MB68B09)	First Release.
+2017/1/20	ZZO(68B09)	First Release.
