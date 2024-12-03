@@ -414,7 +414,7 @@ namespace JCalendars
 		}
 
 		/// <summary>
-		/// 週番号取得
+		/// 月内週番号取得
 		/// </summary>
 		/// <param name="pDate">調査対象年月日</param>
 		/// <returns>1～6</returns>
@@ -434,7 +434,7 @@ namespace JCalendars
 		}
 
 		/// <summary>
-		/// 第Ｎ曜日取得
+		/// 月内第Ｎ曜日取得
 		/// </summary>
 		/// <param name="pDay">調査対象年月日</param>
 		/// <returns>1～5</returns>
@@ -454,7 +454,7 @@ namespace JCalendars
 		}
 
 		/// <summary>
-		/// 第Ｎ、Ｗ曜日の日を取得
+		/// 月内第Ｎ、Ｗ曜日の日を取得
 		/// </summary>
 		/// <param name="pYear">西暦年</param>
 		/// <param name="pMonth">月</param>
@@ -489,7 +489,7 @@ namespace JCalendars
 		}
 
 		/// <summary>
-		/// 第Ｎ、Ｗ曜日判定
+		/// 月内第Ｎ、Ｗ曜日判定
 		/// </summary>
 		/// <param name="pDate">調査対象年月日</param>
 		/// <param name="pCountOfWeek">第Ｎ</param>
@@ -538,6 +538,25 @@ namespace JCalendars
 			}
 
 			throw new ArgumentOutOfRangeException("pMonth");
+		}
+
+		/// <summary>
+		/// 年内週番号取得
+		/// </summary>
+		/// <param name="pDate">調査対象年月日</param>
+		/// <returns>1～53</returns>
+		/// <remarks>
+		/// 指定された日の年内週番号を返す。
+		/// 週の最初は日曜日。
+		/// </remarks>
+		static public int GetWeekOfYear(DateTime pDate)
+		{
+			DateTime startDay = new DateTime(pDate.Year, 1, 1);
+			int startWeek = (int)startDay.DayOfWeek;
+			DateTime firstSunday = startDay.AddDays(-startWeek);
+			TimeSpan diff = pDate - firstSunday;
+			int line = (int)Math.Floor(diff.TotalDays / 7) + 1;
+			return line;
 		}
 		#endregion
 	}

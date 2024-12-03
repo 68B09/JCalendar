@@ -22,6 +22,7 @@ namespace JCalendar
 			//Sub2();
 			//Sub3();
 			//Sub4();
+			//Sub5();
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
@@ -143,6 +144,26 @@ namespace JCalendar
 
 			System.Diagnostics.Debug.WriteLine("1 " + sw1.ElapsedMilliseconds);
 		}
-#endif
+
+		static void Sub5()
+		{
+			int before = 0;
+			DateTime date = new DateTime(2025, 1, 1);
+			while (date.Year <= 2027) {
+				int no = JCalendars.JCalendar.GetWeekOfYear(date);
+				if ((before == 0) || (before != no)) {
+					before = no;
+					System.Diagnostics.Debug.WriteLine("no:" + before + " Date:" + date.ToString("yyyy/MM/dd"));
+
+					if((date.DayOfWeek != DayOfWeek.Sunday) && ((date.Month != 1) && (date.Day != 1)) ){
+						System.Diagnostics.Debug.WriteLine("×Error");
+						break;
+					}
+				}
+
+				date = date.AddDays(1);
+			}
+		}
+#endif	
 	}
 }
